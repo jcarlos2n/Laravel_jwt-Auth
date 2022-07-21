@@ -43,12 +43,15 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Invalid Email or Password',
             ], Response::HTTP_UNAUTHORIZED);
-            
+
         }
 
         return response()->json([
             'success' => true,
             'token' => $jwt_token,
         ]);
+    }
+    public function me(){
+        return response()->json(auth()->user());
     }
 }
