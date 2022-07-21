@@ -43,7 +43,6 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Invalid Email or Password',
             ], Response::HTTP_UNAUTHORIZED);
-
         }
 
         return response()->json([
@@ -51,7 +50,26 @@ class AuthController extends Controller
             'token' => $jwt_token,
         ]);
     }
-    public function me(){
+    public function me()
+    {
         return response()->json(auth()->user());
+    }
+    public function logout(Request $request)
+    {
+        $this->validate($request, [
+            'token' => 'required'
+        ]);
+        try {
+            JWTAuth::invalidate($request->token);
+            return response()->json([
+                'success' => true,
+                'message' => 'User logged out successfully'
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sorry, the user cannot be logged out'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
